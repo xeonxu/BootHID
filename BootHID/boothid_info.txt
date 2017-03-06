@@ -1,0 +1,51 @@
+Contents from https://deskthority.net/workshop-f7/how-to-use-a-pro-micro-as-a-cheap-controller-converter-like-soarer-s-t8448-30.html
+
+This gives you access to the boot loader source code, which you have to customize a bit and then build it. I did that, and you can find a version that works on the Pro Micro attached here:
+ BootHID.zip
+(1.29 KiB) Downloaded 82 times
+
+It's Open Source, so the complete source code, modified for the Pro Micro, to be made with WinAVR, is here:
+ BootHID-02.zip
+(23.71 KiB) Downloaded 80 times
+
+Now this has to be uploaded to the Pro Micro. After a funny hour of experimentation (Mr. Currey's setup implies the Arduino IDE, which I don't use - I don't want the Arduino boot loader!) I came up with the following two AVRdude invocations to get the job done:
+CODE: SELECT ALL
+avrdude -p atmega32u4 -c stk500v1 -P com3 -b 19200 -v -U lfuse:w:0xFF:m -U hfuse:w:0xDD:m -U efuse:w:0xC3:m
+avrdude -p atmega32u4 -c stk500v1 -P com3 -b 19200 -v -U flash:w:BootHID.hex:i
+On my Windows PC, the self-created "programmer" is attached to the virtual COM port COM3 - the -P com3 part of these two invocations is presumably the only thing that needs to be changed on another system. The values for the fuses are taken from this nice article and the .zip file referenced there.
+
+After programming the boot loader was done, I could detach my nano programmer from the PC and attach the Pro Micro instead ... with great care. This micro USB connector is really flimsy. Windows promptly installed a standard HID device - great! Boot loader works! Eh... now what?
+
+Grendel's BootHID solution uses the BootloadHID protocol. If you follow the link, you can download the latest version of the V-USB-based BootloadHID boot loader, which would be completely uninteresting, except for a minor detail - the .zip file also contains a command line tool for the PC which communicates with the boot loader on the AVR device. And this is precisely what I need - they included a precompiled executable in the .zip; an 8K giant of a program. Using this, I uploaded the patched version of Soarer's Converter to the Pro Micro:
+
+CODE: SELECT ALL
+E:\Dev\Atmel\SoarerProMicro>bootloadHID Soarer_at2usb_v1.12_atmega32u4_ProMicro_ResetLED.hex
+Page size   = 128 (0x80)
+Device size = 32768 (0x8000); 30720 bytes remaining
+Uploading 14464 (0x3880) bytes starting at 0 (0x0)
+0x03800 ... 0x03880
+... done!
+
+2 Pro Micros with Grendel's BootHID and Soarer's Converter are ready to go! 8-)
+
+[Edit 2014-11-08:] Slowly, by and by, my cheap chinese stuff comes trickling in... and my plans worked out qute nicely.
+I got a cheap programmer, which, of course, had to be modified to be usable with avrdude. Thanks to this nice documentation and my existing makeshift programmer detailed above, it was a matter of about half an hour to convert it into a USBASP programmer. Then I downloaded and installed the Windows drivers for that from Thomas Fischl's web site, installed them and created a breakout adapter using the cables previously attached to my makeshift programmer. I also downloaded the latest, greatest & best precompiled Windows version 6.1 of avrdude from here, but since I didn't test the new setup against the avrdude version that comes with WinAVR, I can't tell whether it makes any difference.
+
+Here's my shiny new programming setup:
+Zoom in (real dimensions: 3109 x 1966)Image ... much better than the makeshift solution shown above.
+And much faster, too!
+
+Of course, this meant a new round of experimentation to find out the correct parameters for avrdude to get the boot loader onto a Pro Micro. Much easier to determine this time, since I knew pretty well how this setup is supposed to work...
+CODE: SELECT ALL
+avrdude -p atmega32u4 -c usbasp -v -U lfuse:w:0xFF:m -U hfuse:w:0xDD:m -U efuse:w:0xC3:m
+avrdude -p atmega32u4 -c usbasp -v -U flash:w:BootHID.hex:i
+The rest stays like before - once the boot loader is on the Pro Micro, the programmer can peacefully go to sleep again.
+
+[Edit 2014-11-12:] I found a small problem in the cooperation between Grendel's BootHID and the original BootloadHID executable. The protocol between the two programs is a bit too simple; BootloadHID can't tell how big the boot loader on the ATmega32U4 is, so it uses the size of the original V-USB-based boot loader (2K) to calculate the space left for the application. Grendel's BootHID is only half as big (1K), so larger applications could be used - but BootloadHID prevents this and insists on a maximum application size of 30K.
+To make up for this, I created a slightly modified BootloadHID program; the boot loader size can be configured at compile time by passing it to the compiler like this:
+CODE: SELECT ALL
+-DBOOTLOAD_SIZE=1024
+(default 2048, like in the original).
+Modified Windows executable and source code are here:
+ bootloadHID.2012-12-08.commandline.zip
+(18.22 KiB) Downloaded 79 times
