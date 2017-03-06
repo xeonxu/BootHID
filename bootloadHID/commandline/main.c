@@ -19,6 +19,10 @@
 #define IDENT_PRODUCT_NUM       1503
 #define IDENT_PRODUCT_STRING    "HIDBoot"
 
+#ifndef BOOTLOAD_SIZE
+#define BOOTLOAD_SIZE           2048
+#endif
+
 /* ------------------------------------------------------------------------- */
 
 static char dataBuffer[65536 + 256];    /* buffer for file data */
@@ -169,8 +173,8 @@ union{
         pageSize = getUsbInt(buffer.info.pageSize, 2);
         deviceSize = getUsbInt(buffer.info.flashSize, 4);
         printf("Page size   = %d (0x%x)\n", pageSize, pageSize);
-        printf("Device size = %d (0x%x); %d bytes remaining\n", deviceSize, deviceSize, deviceSize - 2048);
-        if(endAddr > deviceSize - 2048){
+        printf("Device size = %d (0x%x); %d bytes remaining\n", deviceSize, deviceSize, deviceSize - BOOTLOAD_SIZE);
+        if(endAddr > deviceSize - BOOTLOAD_SIZE){
             fprintf(stderr, "Data (%d bytes) exceeds remaining flash size!\n", endAddr);
             err = -1;
             goto errorOccurred;
