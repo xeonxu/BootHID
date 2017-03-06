@@ -25,7 +25,7 @@ ASMFLAGS += -x assembler-with-cpp -Wa,-gdwarf2
 
 ## Linker flags
 LDFLAGS = $(COMMON)
-LDFLAGS += -T ..\avr5b.x -Wl,-Map=BootHID.map
+LDFLAGS += -T ../avr5b.x -Wl,-Map=BootHID.map
 LDFLAGS += -Wl,-section-start=.text=0x7c00
 
 
