@@ -3,19 +3,19 @@
 ###############################################################################
 
 ## General Flags
-PROJECT = BootHID
-MCU = atmega32u4
-TARGET = BootHID.elf
-CC = avr-gcc
-
-CPP = avr-g++
+PROJECT ?= BootHID
+MCU     ?= atmega32u4
+TARGET  ?= BootHID.elf
+F_CPU   ?= 16000000UL
+CC       = avr-gcc
+CPP      = avr-g++
 
 ## Options common to compile, link and assembly rules
 COMMON = -mmcu=$(MCU)
 
 ## Compile options common for all C compilation units.
 CFLAGS = $(COMMON)
-CFLAGS += -Wall -gdwarf-2 -DF_CPU=16000000UL -Os -funsigned-char -funsigned-bitfields -fpack-struct -fshort-enums
+CFLAGS += -Wall -gdwarf-2 -DF_CPU=$(F_CPU) -Os -funsigned-char -funsigned-bitfields -fpack-struct -fshort-enums
 CFLAGS += -MD -MP -MT $(*F).o -MF dep/$(@F).d 
 
 ## Assembly specific flags
