@@ -75,7 +75,7 @@ $(TARGET): $(OBJECTS)
 
 program: $(TARGET:.elf=.hex)
 	avrdude -P $(DEV_PORT) -b 19200 -c avrisp -p m32u4 -v -e -U lfuse:w:0xFF:m -U hfuse:w:0xDD:m -U efuse:w:0xF3:m
-	avrdude -P $(DEV_PORT) -b 19200 -c avrisp -p m32u4 -v -e -U flash:w:$<
+	avrdude -P $(DEV_PORT) -b 19200 -c avrisp -p m32u4 -v -e -U flash:w:$< -U lock:w:0x2F:m
 
 ## Clean target
 .PHONY: clean
