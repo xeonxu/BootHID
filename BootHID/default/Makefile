@@ -7,8 +7,11 @@ PROJECT ?= BootHID
 MCU     ?= atmega32u4
 TARGET  ?= BootHID.elf
 F_CPU   ?= 16000000UL
+DEV_PORT ?=/dev/tty.usbmodem14141
+
 CC       = avr-gcc
 CPP      = avr-g++
+
 
 ## Options common to compile, link and assembly rules
 COMMON = -mmcu=$(MCU)
@@ -47,7 +50,7 @@ OBJECTS = usb_hid.o main.o vt.o
 LINKONLYOBJECTS = 
 
 ## Build
-all: $(TARGET) BootHID.hex BootHID.eep BootHID.lss## Compile
+all: $(TARGET) BootHID.hex BootHID.eep BootHID.lss ## Compile
 usb_hid.o: ../usb_hid.c
 	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
 
@@ -69,6 +72,10 @@ $(TARGET): $(OBJECTS)
 
 %.lss: $(TARGET)
 	avr-objdump -h -S $< > $@
+
+program: $(TARGET:.elf=.hex)
+	avrdude -P $(DEV_PORT) -b 19200 -c avrisp -p m32u4 -v -e -U lfuse:w:0xFF:m -U hfuse:w:0xDD:m -U efuse:w:0xF3:m
+	avrdude -P $(DEV_PORT) -b 19200 -c avrisp -p m32u4 -v -e -U flash:w:$<
 
 ## Clean target
 .PHONY: clean

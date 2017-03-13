@@ -14,9 +14,9 @@
 #     make flash   # to load the boot loader into flash
 #     make lock    # to protect the boot loader from overwriting
 
-DEVICE = atmega8
+DEVICE = atmega32u4
 BOOTLOADER_ADDRESS = 1800
-F_CPU = 12000000
+F_CPU = 16000000
 FUSEH = 0xc0
 FUSEL = 0x9f
 # Fuse high byte:
