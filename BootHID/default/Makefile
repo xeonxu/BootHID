@@ -41,7 +41,7 @@ HEX_EEPROM_FLAGS += --change-section-lma .eeprom=0 --no-change-warnings
 
 
 ## Include Directories
-INCLUDES = -I"../../includes" 
+INCLUDES = -I"../includes" 
 
 ## Objects that must be built in order to link
 OBJECTS = usb_hid.o main.o vt.o 
