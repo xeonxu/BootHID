@@ -80,7 +80,7 @@ program: $(TARGET:.elf=.hex)
 ## Clean target
 .PHONY: clean
 clean:
-	-rm -rf $(OBJECTS) BootHID.elf dep BootHID.hex BootHID.eep BootHID.lss BootHID.map
+	-rm -rf $(OBJECTS) BootHID.elf dep BootHID.hex BootHID.eep BootHID.lss BootHID.map *~
 
 
 ## Other dependencies
