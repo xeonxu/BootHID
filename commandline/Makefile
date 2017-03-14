@@ -39,7 +39,7 @@ strip: $(PROGRAM)
 	strip $(PROGRAM)
 
 clean:
-	rm -f $(OBJ) $(PROGRAM)
+	rm -f $(OBJ) $(PROGRAM) .\#* \#*\# *\~
 
 .c.o:
 	$(CC) $(ARCH_COMPILE) $(CFLAGS) -c $*.c -o $*.o
