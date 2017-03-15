@@ -112,7 +112,7 @@ ALLHEXFILES = hexfiles/at90usb82_8mhz.hex hexfiles/at90usb162_8mhz.hex hexfiles/
 hexfiles/atmega8u2_8mhz.hex hexfiles/atmega16u2_8mhz.hex hexfiles/atmega32u2_8mhz.hex hexfiles/atmega16u4_8mhz.hex \
 hexfiles/atmega32u4_8mhz.hex hexfiles/at90usb82_16mhz.hex hexfiles/at90usb162_16mhz.hex hexfiles/at90usb646_16mhz.hex \
 hexfiles/atmega8u2_16mhz.hex hexfiles/atmega16u2_16mhz.hex hexfiles/atmega32u2_16mhz.hex \
-hexfiles/atmega16u4_16mhz.hex hexfiles/atmega32u4_16mhz.hex  #hexfiles/at90usb1286_16mhz.hex hexfiles/at90usb1286_8mhz.hex
+hexfiles/atmega16u4_16mhz.hex hexfiles/atmega32u4_16mhz.hex hexfiles/at90usb1286_16mhz.hex hexfiles/at90usb1286_8mhz.hex
 
 allhexfiles: $(ALLHEXFILES)
 	$(MAKE) clean
@@ -124,9 +124,9 @@ $(ALLHEXFILES):
 	clock=`echo $@ | sed -e 's|.*_||g' -e 's|mhz.*||g'`; \
 	echo "$$device"|grep "usb" > /dev/null; \
 	if [ $$? = 0 ];then \
-	addr=`echo $$device | sed -e 's/at90usb\([0-9]\+\)[0-9]\{1\}/\1/g' | awk '{printf("%x", ($$1 - 1) * 1024)}'`; \
+	addr=`echo $$device | sed -e 's/at90usb//g' -e 's/\([0-9]\)[0-9]\{1\}/\1/g' | awk '{printf("%x", ($$1 - 1) * 1024)}'`; \
 	else \
-	addr=`echo $$device | sed -e 's/atmega\([0-9]\+\)u.*/\1/g' | awk '{printf("%x", ($$1 - 1) * 1024)}'`; \
+	addr=`echo $$device |sed -e 's/atmega//g' -e 's/\([0-9]\)u.*/\1/g' | awk '{printf("%x", ($$1 - 1) * 1024)}'`; \
 	fi; \
 	echo "### Make with F_CPU=$${clock}000000 DEVICE=$$device BOOTLOADER_ADDRESS=$$addr"; \
 	$(MAKE) clean; \
