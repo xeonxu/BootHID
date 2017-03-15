@@ -124,7 +124,7 @@ $(ALLHEXFILES):
 	clock=`echo $@ | sed -e 's|.*_||g' -e 's|mhz.*||g'`; \
 	echo "$$device"|grep "usb" > /dev/null; \
 	if [ $$? = 0 ];then \
-	addr=`echo $$device | sed -e 's/at90usb//g' -e 's/\([0-9]\)[0-9]\{1\}/\1/g' | awk '{printf("%x", ($$1 - 1) * 1024)}'`; \
+	addr=`echo $$device | sed -e 's/at90usb//g' -e 's/[0-9]$$//g' | awk '{printf("%x", ($$1 - 1) * 1024)}'`; \
 	else \
 	addr=`echo $$device |sed -e 's/atmega//g' -e 's/\([0-9]\)u.*/\1/g' | awk '{printf("%x", ($$1 - 1) * 1024)}'`; \
 	fi; \
