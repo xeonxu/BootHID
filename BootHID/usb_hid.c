@@ -86,12 +86,12 @@
 #define DEVICE_NAME		'H', 'I', 'D', 'B', 'o', 'o', 't'
 #define DEVICE_NAME_SZ		7
 
-#define	USE_LED			0
+#define	USE_LED			1
 
-#define LED_CONFIG()		set_bit(  DDRD, PB6 )
-#define LED_ON()		clr_bit( PORTD, PB6 )
-#define LED_OFF()		set_bit( PORTD, PB6 )
-#define	LED_TOG()		tog_bit( PORTD, PB6 )
+#define LED_CONFIG()		set_bit(  DDRD, PD5 )
+#define LED_ON()		clr_bit( PORTD, PD5 )
+#define LED_OFF()		set_bit( PORTD, PD5 )
+#define LED_TOG()		tog_bit( PORTD, PD5 )
 
 //------------------------------------------------------------------------------
 // Endpoint Buffer Configuration
