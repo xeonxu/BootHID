@@ -88,10 +88,15 @@
 
 #define	USE_LED			1
 
-#define LED_CONFIG()		set_bit(  DDRD, PD5 )
-#define LED_ON()		clr_bit( PORTD, PD5 )
-#define LED_OFF()		set_bit( PORTD, PD5 )
-#define LED_TOG()		tog_bit( PORTD, PD5 )
+#define LED_CONFIG()		set_bit(  DDRB, PB0 )
+#define LED_ON()		clr_bit( PORTB, PB0 )
+#define LED_OFF()		set_bit( PORTB, PB0 )
+#define LED_TOG()		tog_bit( PORTB, PB0 )
+
+#define LED2_CONFIG()		set_bit(  DDRD, PD5 )
+#define LED2_ON()		clr_bit( PORTD, PD5 )
+#define LED2_OFF()		set_bit( PORTD, PD5 )
+#define LED2_TOG()		tog_bit( PORTD, PD5 )
 
 //------------------------------------------------------------------------------
 // Endpoint Buffer Configuration
@@ -250,6 +255,8 @@ void usb_init ( void )
   #if USE_LED
     LED_CONFIG() ;
     LED_OFF() ;
+    LED2_CONFIG() ;
+    LED2_ON() ;
   #endif
 
     MCUCR = _B1(IVCE) ;			// enable change of interrupt vectors
